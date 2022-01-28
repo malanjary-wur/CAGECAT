@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% from "macros.html" import showNavigationBar %}
+
+{% block navigationBar %}
+    {{ showNavigationBar('feedback') }}
+{% endblock %}
+
+{% block content %}
+    <div class="indent">
+        <h3>Your feedback has been submitted.</h3>
+    </div>
+{% endblock %}

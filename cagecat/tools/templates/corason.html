@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% from "macros.html" import create_scientific_input %}
+{% from "macros.html" import showNavigationBar %}
+{% from "macros.html" import renderHelpButton %}
+{% from "macros.html" import showSelectedClusters %}
+{% from 'macros.html' import renderJobDetailsInput %}
+{% from 'macros.html' import showRequiredInputsText %}
+
+{% block navigationBar %}
+    {{ showNavigationBar('analyze') }}
+{% endblock %}
+
+        {% block content %}
+    <h2 class="indent">CORASON</h2>
+            {{  showRequiredInputsText() }}
+
+<div>
+    <form action="{{url_for('submit_job')}}" method="post" onsubmit="mergeExponentials();addClustersToUse()">
+        <input type="hidden" name="job_type" value="corason"/>
+        <input type="hidden" name="prev_job_id" value="{{prev_job_id}}"/>
+
+        {{ renderJobDetailsInput() }}
+
+        <label class="fieldset-label" for="inputSection">Input</label>
+        <fieldset id="inputSection">
+            <div class="input-layer bigger">
+                <label class="input-label" for="selectedQuery">Query*</label>
+                {{ renderHelpButton('selectedQuery') }}
+                <input readonly="readonly" type="text" id="selectedQuery" name="selectedQuery" required="required" value="{{query}}"/>
+            </div>
+            <div class="input-layer">
+                <label class="input-label" for="selectedReferenceCluster">Reference cluster no.*</label>
+                {{ renderHelpButton('selectedReferenceCluster') }}
+                <select required="required" name="selectedReferenceCluster" id="selectedReferenceCluster">
+                        {% for num in clust_numbers %}
+                            <option value="{{ num }}">{{ num }}</option>
+                        {% endfor %}
+                </select>
+            </div>
+
+            <div class="input-layer">
+                <label class="textarea-label" for="selectedClustersToSearch">Selected clusters</label>
+                {{ renderHelpButton('selectedClustersToSearch') }}
+                {{ showSelectedClusters(cluster_headers, False, False) }}
+                <input type="hidden" name="selectedClustersToUse" id="selectedClustersToUse" value=""/>
+            </div>
+
+        </fieldset>
+
+        <label class="fieldset-label" for="optionsSection">Options</label>
+        <fieldset id="optionsSection">
+
+            {{ create_scientific_input('e-value', 'Evalue', -15) }}
+
+            <div>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="bitscore"/>Bitscore
+                </label>
+                {{ renderHelpButton('bitscore') }}
+            </div>
+            <div class="input-layer">
+                <label class="input-label" for="clusterRadio">Cluster radio*</label>
+                {{ renderHelpButton('clusterRadio') }}
+                <input type="number" value="10" id="clusterRadio" name="clusterRadio" required="required"/>
+            </div>
+
+            {{ create_scientific_input('e-cluster', 'Ecluster', -3) }}
+            {{ create_scientific_input('e-core', 'Ecore', -3) }}
+
+{#            Intentionally no list. See workers.py function corason#}
+
+            <div class="input-layer">
+                <label class="input-label" for="rescale">Rescale*</label>
+                {{ renderHelpButton('rescale') }}
+                <input type="number" id="rescale" name="rescale" value="85000" step="1" required="required"/>
+            </div>
+        </fieldset>
+
+        <div class="input-layer centered">
+            <input class="button" value="Submit" type="submit"/>
+        </div>
+    </form>
+</div>
+
+        {% endblock %}
+
+{#TODO future: remove below documentation, left in for future purposes#}
+<!--        #     Usage:-->
+<!--        #     CORASON extense manual can be consulted at:-->
+<!--        #     https://github.com/nselem/EvoDivMet/wiki/Detailed-Tutorial/-->
+<!--        #-->
+<!--        #     &#45;&#45;rast_ids            Required when faa files are used (No Default) RAST ids tab-separated table with the following Rast data.-->
+<!--        #     Job id\tGenome id\tOrganism name.-->
+<!--        #-->
+<!--        # &#45;&#45;g                   Genbank mode. If CORASON is used with genbank files instead of RAST fasta files, then -g must be used.-->
+<!--        # A RAST ids file will be automatically created in this mode.-->
+<!--        #-->
+<!--        # &#45;&#45;queryfile,-q        Required (No default)   Your aminoacid sequence on fasta file.-->
+<!--        #-->
+<!--        # &#45;&#45;special_org,-s      Required (No default)   Job Id (from RAST) for the cluster where your query belongs.-->
+<!--        #-->
+<!--        # &#45;&#45;e_value             Default: 1E-15 (float)  E value. Minimal for a gene to be considered a hit.-->
+<!--        #-->
+<!--        # &#45;&#45;bitscore,-b         Default: 0 (Positive integer) After one run look into file .BLAST.pre to be more restrictive on hits.-->
+<!--        #-->
+<!--        # &#45;&#45;cluster_radio -c    Default: 10 (Positive integer) Number of genes in the neighborhood to analize.-->
+<!--        #-->
+<!--        # &#45;&#45;e_cluster           Default: 1E-3 (float)  e-value for sequences from reference cluster, values above it will be colored.-->
+<!--        #-->
+<!--        # &#45;&#45;e_core              Default: 1E-3 (float) e-value for Best Bidirectional Hits used to cunstruct genomic core from clusters.-->
+<!--        #-->
+<!--        # &#45;&#45;list                Default: GENOME/*.faa (string separated by "," or ":".-->
+<!--        #     Example 1,2,4:6 produce a search on genomes 1,2,4,5,6)-->
+<!--        # Leaving this option empty will conduce to search on all genomes in GENOME directory.-->
+<!--        #-->
+<!--        # &#45;&#45;rescale,r           Default: 85000 (integer) Increasing this number will show a bigger cluster region with smaller genes.-->
+<!--        #-->
+<!--        # &#45;&#45;antismash,a         AntiSMASH file optional-->
+<!--        #-->
+<!--        # &#45;&#45;verbose,v           If you would like to read more output from dir_scripts.-->
+<!--        # Most of the time only useful if you would like script debugging.-->
+<!--        #-->
+<!--        # Remarks: For float values (as e_value, e_core etc) 0.001 will work, but-->
+<!--        # .001 won't do it.-->

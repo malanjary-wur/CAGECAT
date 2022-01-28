@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% from "macros.html" import showNavigationBar %}
+{% from 'macros.html' import showRequiredInputsText %}
+
+{% block navigationBar %}
+    {{ showNavigationBar('feedback') }}
+{% endblock %}
+
+{% block content %}
+    <div class="indent">
+        <h2>Feedback page</h2>
+
+        <p>If you encounter a user-interface problem, try pressing CTRL+F5 to reload all service files. If you encountered another bug/error, please notify the developers by filling in the form below. Please specify the concerning job ID as well as many details as possible and what happened moments prior to the bug/error.</p>
+        <p>Suggestions and feedback are more than welcome, for which we kindly ask you to send them to us using the form below.</p>
+        <p>After you submitted feedback, a copy of your report will be sent to your e-mail address. Note that this e-mail address will be used for future correspondence about your report.</p>
+
+        <div>
+            <form method="post" action="{{ url_for('feedback.submit_feedback') }}">
+                 <p>Input fields with an * are required.</p>
+
+                <div class="input-layer">
+                    <label class="select-label" for="feedback_type_input">Type of feedback*</label>
+                    <select id="feedback_type_input" required="required" name="feedback_type">
+                        <option value="bug">Bug / error</option>
+                        <option value="suggestion">Suggestion</option>
+                        <option value="available_tools">Available tools</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="input-layer">
+                    <label class="input-label">Email address for correspondence*</label>
+                    <input required="required" name="email" type="email" maxlength="100"/>
+                </div>
+
+                <div class="input-layer">
+                    <label class="input-label" for="job_id_input">Concerning job ID</label>
+                    {% if request.args['job_id'] %}
+                        {% set job_id = request.args['job_id'] %}
+                    {% else %}
+                        {% set job_id = '' %}
+                    {% endif %}
+                    <input id="job_id_input" name="job_id" type="text" value="{{ job_id }}" maxlength="15"/>
+                </div>
+
+                <div class="input-layer">
+                    <label for="message_input" class="textarea-label">Message*</label>
+                    <textarea placeholder="limited to 1000 characters" required="required" maxlength="1000" name="message" id="message_input" cols="45" rows="10"></textarea>
+                </div>
+                <div class="input-layer centered">
+                    <input class="button" value="Send" type="submit"/>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

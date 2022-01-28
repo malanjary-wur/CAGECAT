@@ -1,0 +1,11 @@
+#!/bin/bash
+PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+SHELL=/bin/sh
+
+# make sure all sh scripts have rights to be executed (chmod +x <filename>)
+
+# minute hour day_of_month month day_of_week command
+20 0 * * * root cd /repo/maintenance && python /repo/maintenance/maint_remove_old_jobs.py
+10 0 */7 * root /repo/maintenance/maint_backup.sh > /process_logs/maintenance/$(date +"\%Y\%m\%d")_backup.log
+30 2 2 * * root cd /repo/hmm_database_creation && /repo/hmm_database_creation/construct_hmm_databases.sh > /process_logs/maintenance/$(date +"\%Y\%m\%d")_hmm_dbs_refseq_downloading.log
+30 2 2 * * root cd /repo/hmm_database_creation && python /repo/hmm_database_creation/create_databases.py > /process_logs/maintenance/$(date +"\%Y\%m\%d")_hmm_dbs_creation.log

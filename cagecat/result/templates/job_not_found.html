@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% from "macros.html" import showNavigationBar %}
+
+{% block navigationBar %}
+    {{ showNavigationBar('results') }}
+{% endblock %}
+
+{% block content %}
+
+<p class="indent">Job <b>{{job_id}}</b> was not found in the database.</p>
+{% endblock %}

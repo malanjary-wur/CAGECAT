@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% from "macros.html" import showNavigationBar %}
+
+{% block navigationBar %}
+    {{ showNavigationBar('') }}
+{% endblock %}
+
+{% block content %}
+    <div>
+        <p>You submitted invalid parameter values.</p>
+    </div>
+{% endblock %}

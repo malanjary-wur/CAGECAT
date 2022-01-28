@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% from "macros.html" import showNavigationBar %}
+
+{% block navigationBar %}
+    {{ showNavigationBar('tools') }}
+{% endblock %}
+
+{% block content %}
+    <div class="indent">
+        <div>
+            <h1>Implemented tools</h1>
+            <p>This page displays an overview of the implemented tools on CAGECAT.</p>
+        </div>
+
+        <div>
+            <h2>cblaster: homologous gene cluster searches</h2>
+            <ul>
+                <li><a href="{{ url_for('tools.tools_explanation') }}">Explanation of cblaster and its usages</a></li>
+                <li><a target="_blank" href="https://github.com/gamcil/cblaster">GitHub repository</a></li>
+                <li><a target="_blank" href="https://cblaster.readthedocs.io/en/latest/">Authors' wiki</a></li>
+                <li><a target="_blank" href="https://dx.doi.org/10.1093/bioadv/vbab016">Publication</a></li>
+            </ul>
+        </div>
+
+        <div>
+            <h2>clinker: generating publication-quality gene cluster comparison figures</h2>
+            <ul>
+                <li><a href="{{ url_for('tools.tools_explanation') }}">Explanation of clinker and its usages</a></li>
+                <li><a target="_blank" href="https://github.com/gamcil/clinker">GitHub repository</a></li>
+                <li><a target="_blank" href="https://github.com/gamcil/clinker/wiki">Authors' wiki</a></li>
+                <li><a target="_blank" href="http://dx.doi.org/10.1093/bioinformatics/btab007">Publication</a></li>
+            </ul>
+        </div>
+
+{#        <div>#}
+{#            <h2>CORASON (not fully implemented yet)</h2>#}
+{#            <ul>#}
+{#                <li><a href="{{ url_for('tools.tools_explanation') }}">Explanation of CORASON and its usages</a></li>#}
+{#                <li><a target="_blank" href="https://github.com/nselem/corason">GitHub repository</a></li>#}
+{#                <li><a target="_blank" href="https://github.com/nselem/corason/wiki">Wiki</a></li>#}
+{#                <li><a target="_blank" href="https://www.nature.com/articles/s41589-019-0400-9">Publication</a></li>#}
+{#            </ul>#}
+{#        </div>#}
+
+    <h2>Tool interoperability</h2>
+    <p>See figure below for an overview of how the implemented tools are connected. GNE: Gene Neighbourhood Estimation</p>
+    <img height="450px;" alt="Tools workflow" src="{{ url_for('static', filename='images/tool_compatability_overview.svg')}}"/>
+    </div>
+
+{% endblock %}

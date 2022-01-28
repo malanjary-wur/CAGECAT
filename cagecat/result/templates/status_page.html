@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% from "macros.html" import showNavigationBar %}
+{% from "macros.html" import showBookMarkButton %}
+
+{% block navigationBar %}
+    {{ showNavigationBar('results') }}
+{% endblock %}
+
+{% block scripts %}
+    {% if request.args.get('store_job_id') == "True" %}
+        storeJobId('{{ j_id }}','{{ request.args.get("j_type")}}', '{{ job_title }}');
+        redirect('{{  url_for('result.show_result', job_id=j_id)}}');
+    {% endif %}
+    startJobExecutionStageUpdater('{{ j_id }}');
+{% endblock %}
+
+{% block content %}
+    <div class="indent">
+        <p>Job <span class="important" id="givenJobID">{{j_id}}</span> is currently {{status}}</p>
+
+        {% if parent_job != "null" %}
+            <p>Parent job: <a href="{{url_for('result.show_result', job_id=parent_job)}}">{{parent_job}}</a></p>
+        {% endif %}
+
+{#        TODO: possibly add progress bar in future#}
+{#        <div id="progress-bar" style="background-color: #5284a7">#}
+{#            <div id="progress">0%</div>#}
+{#        </div>#}
+    
+        {% for stage in stages %}
+            <div style="height: 30px;">
+                <img id="stage{{ loop.index }}" style="vertical-align: middle; width: 60px; height: auto;" src="{{ url_for('static', filename='images/dna_loader.gif') }}">
+                <span>{{ loop.index }}. {{ stage }}</span>
+            </div>
+        {% endfor %}
+        
+{#        <p>In future releases, it will be possible to start downstream analyses from this page.</p>#}
+
+        {{ showBookMarkButton() }}
+    </div>
+
+{% endblock %}

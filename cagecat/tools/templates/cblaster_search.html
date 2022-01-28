@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+{% from "macros.html" import result_table %}
+{% from "macros.html" import showNavigationBar %}
+{% from "macros.html" import renderHelpButton %}
+{% from 'macros.html' import renderJobDetailsInput %}
+{% from 'macros.html' import showRequiredInputsText %}
+{% from 'macros.html' import renderForm %}
+
+{% block scripts %}
+    {% if module_to_show == 'recompute' %}
+$(':radio:not(:checked)').attr('disabled', true);
+    {% else %}
+initReadQueryFile();
+    {% endif %}
+addAccordionListeners();
+{% endblock %}
+
+{% block navigationBar %}
+    {{ showNavigationBar('analyze') }}
+{% endblock %}
+
+{% block content %}
+    {% if module_to_show is none %}
+        {% set module_name = "Search" %}
+    {% else %}
+        {% set module_name = module_to_show.capitalize()  %}
+    {% endif %}
+
+    <h2 class="indent">{{ module_name }} (cblaster)</h2>
+    {{  showRequiredInputsText() }}
+
+<div id="searchModuleContent" class="moduleContent">
+<form method="post" enctype="multipart/form-data" action="{{url_for('submit_job')}}" onsubmit="addRequiredSeqs()" name="searchOptionForm">
+    <input type="hidden" name="job_type" value="search" required="required"/>
+
+    <div>
+        <label class="fieldset-label" for="jobDetailsInputFieldset">Job description</label>
+        <fieldset id="jobDetailsInputFieldset">
+            {{ renderForm(all_forms.base.general.job_info) }}
+        </fieldset>
+    </div>
+
+    {% if prev_run_id is none %}
+    <label class="fieldset-label" for="inputSection">Input</label>
+    <fieldset id="inputSection">
+
+
+        <div class="radio-options">
+{#            {{ renderForm(all_forms.search_modes) }} TODO: change to WTForms in future#}
+            <label class="radioLabel">
+                <input type="radio"  class="radio-margin" value="remote" name="mode" id="remoteMode" checked="checked" onclick="changeSearchMode('remote')">Remote
+            </label>
+            <label class="radioLabel">
+                <input type="radio" value="hmm" name="mode" onclick="changeSearchMode('hmm')">HMM
+            </label>
+            <label class="radioLabel">
+                <input type="radio" value="combi_remote" name="mode" onclick="changeSearchMode('combi_remote')">Remote + HMM
+            </label>
+        </div>
+
+        <div class="radio-options" id="remoteOptionsSection">
+            <div>
+{#                    {{ renderForm(all_forms.search_modes) }} TODO: change to WTForms in future#}
+                <label class="radioLabel">
+                <input type="radio" class="radio-margin" value="file" checked="checked" id="radioFasta"
+                       name="inputType" onclick="showInputOptions('file', 1)"/>File</label>
+                <label class="radioLabel">
+                <input type="radio" value="ncbi_entries" id="radioNCBIEntries"
+                       name="inputType"
+                       onclick="showInputOptions('ncbi_entries', 1)"/>NCBI entries
+                </label>
+            </div>
+
+            <div class="div-margin" id="genomeFileUploadDiv">
+                {{ renderForm(all_forms.remote_input_types_file) }}
+
+
+{#                Missing div?#}
+                <br/>
+                <span id="selectedFileName" style="margin-left:1%;"></span>
+                <div class="error-message no-display" id="fileUploadIncorExt">
+                    <span id="fileUploadIncorExtText"></span>
+                </div>
+
+            <div id="ncbiEntriesDiv" class="no-display">
+                {{ renderForm(all_forms.remote_input_types_ncbi_entries) }}
+                <div class="error-message no-display" id="accessionsError">
+                    <span id="accessionsErrorText"></span>
+                </div>
+            </div>
+
+        </div>
+    </fieldset>
+
+<div id="hmmFullFieldset" class="no-display">
+    <label class="fieldset-label" for="hmmSection">Hidden Markov Models (HMM)</label>
+    <fieldset id="hmmSection" disabled="disabled">
+            <div id="hmmProfilesDiv">
+
+{#            TODO: remove below if selectedGenus is added to WTForms#}
+                <div class="input-layer">
+                    <label class="select-label" for="selectedGenus">Genus*</label>
+                    <select class="select-options" required="required" name="selectedGenus" id="selectedGenus">
+
+                        {% for organism in organism_databases %}
+                            <optgroup label="{{ organism }}">
+                            {% for genus in organism_databases.get(organism) %}
+                                <option value="{{ organism }}_{{ genus }}">{{ genus }}</option>
+                            {% endfor %}
+                            </optgroup>
+                        {% endfor %}
+                    </select>
+                    {{ renderHelpButton('selectedGenus') }}
+                </div>
+
+                {{ renderForm(all_forms.hmm) }}
+            </div>
+    </fieldset>
+</div>
+
+<div id="searchSectionFullFieldset">
+    <label class="fieldset-label" for="searchSection">Search</label>
+    <fieldset id="searchSection">
+        {{ renderForm(all_forms.search) }}
+    </fieldset>
+</div>
+
+{% else %}
+        <input type="hidden" name="searchEnteredJobId" value="{{ prev_run_id }}"></input>
+        <input type="hidden" value="prev_session" id="radioPrevSession" name="inputType"/>
+        <input type="hidden" name="mode" value="remote"></input>
+{#        TODO future: mode is not always remote, find way to als use it for HMM / HMM+remote#}
+{% endif %}
+
+<label id="advancedSection" class="fieldset-label accordion">Advanced +</label>
+<fieldset id="dummy"></fieldset>
+<div class="panel">
+    <div id="filteringSectionFullFieldset">
+        <label class="fieldset-label" for="filteringSection">Filtering</label>
+        <fieldset id="filteringSection">
+            {{ renderForm(all_forms.filtering) }}
+        </fieldset>
+    </div>
+
+    <div id="clusteringSectionFullFieldset">
+        <label class="fieldset-label" for="clusteringSection">Clustering</label>
+        <fieldset id="clusteringSection">
+            {{ renderForm(all_forms.base.clustering) }}
+
+        </fieldset>
+    </div>
+
+    <div>
+        <label class="fieldset-label" for="searchSumTableSection">Summary table</label>
+        <fieldset id="searchSumTableSection">
+            {{ renderForm(all_forms.base.summary_table) }}
+        </fieldset>
+    </div>
+
+    <div>
+        <label class="fieldset-label" for="searchBinTableSection">Binary table</label>
+        <fieldset id="searchBinTableSection">
+            {{ renderForm(all_forms.base.binary_table) }}
+        </fieldset>
+    </div>
+
+    <div>
+        <label class="fieldset-label" for="generalOptionSection">Additional options</label>
+        <fieldset id="generalOptionSection">
+            {{ renderForm(all_forms.base.additional_options) }}
+        </fieldset>
+    </div>
+
+    <div>
+        <label class="fieldset-label" for="intermediateGenesSection">Intermediate genes</label>
+        <fieldset id="intermediateGenesSection">
+            {{ renderForm(all_forms.base.intermediate_genes) }}
+        </fieldset>
+    </div>
+
+</div>
+
+<div class="input-layer centered">
+    {{ all_forms.base.general.submit.submit }}
+{#    <input class="button" value="Submit" type="submit" id="submitSearchForm"/>#}
+</div>
+    </form>
+</div>
+{% endblock %}

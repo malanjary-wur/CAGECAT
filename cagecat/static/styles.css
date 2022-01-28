@@ -1,0 +1,623 @@
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+    /*Remove arrows from number inputs*/
+}
+
+body{
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+}
+
+.button {
+    margin: 10px auto;
+    color: white;
+    border: 2px solid #5284a7;
+    border-radius: 6px;
+    background-color: #6aabd7;
+    font-size: 18px;
+    padding: 2px 8px;
+    font-family:  "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.button:hover {
+    background-color: #5284a7;
+}
+
+.button:active{
+    background-color: #304f63;
+}
+
+.select-options {
+    border-radius: 3px;
+    box-shadow: 0 0.5px 0 0.5px #a3a2a2;
+}
+
+input, select {
+    margin: 3px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+}
+
+.important {
+    font-weight: bold;
+}
+
+.smaller {
+    font-size: 15px;
+}
+
+ul.nav {
+    border: 1px solid  #6aabd7;
+    border-radius: 2px;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #6aabd7;
+}
+
+ul.nav li {
+    float: left;
+}
+
+ul.nav li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+ul.nav li.status {
+    margin: 0 auto;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 18px;
+    width: 40%;
+
+}
+
+ul.status {
+    background-color: white;
+    margin: 0 auto;
+    width: 40%;
+}
+
+ul.nav li a:hover {
+    background-color: #5284a7;
+}
+ul.nav li a:active{
+    background-color: #304f63;
+}
+
+ul.nav li a.active {
+    background-color: #5284a7;
+}
+
+ul.nav li.right-nav {
+    float:right;
+}
+
+.medium {
+    width: 30%;
+    margin:auto;
+}
+
+.status {
+    list-style-type: none;
+    background-color: gray;
+    width: 20%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border-radius: 0 0 3px 3px;
+    color:white;
+}
+
+p.server-status {
+    margin: 0 auto;
+    background: gray;
+    font-size: 17px;
+    width: 20%;
+    color: white;
+    text-align: center;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+
+.larger-font{
+    font-size: 18px;
+}
+
+input[type="file"] {
+    opacity: 0; /* make transparent */
+    z-index: -1; /* move under anything else */
+    position: absolute; /* don't let it take up space */
+}
+
+input:disabled, textarea:disabled, label.disabled, select:disabled, form button:disabled {
+    cursor: not-allowed;
+}
+
+label.disabled, label.disabled:hover, form button:disabled.hover{
+    background-color: #cccccc;
+}
+
+.centered {
+    text-align: center;
+    position: relative;
+}
+
+iframe {
+    margin: 30px;
+    background: white;
+    border: 1px solid #555555;
+    border-radius: 2px;
+    width: 90%;
+
+}
+
+.file-upload-lbl{
+    margin-top: 0;
+    border: 1px solid #5284a7;
+    border-radius: 5px;
+    padding: 5px 15px;
+    background-color: #6aabd7;
+    color: white;
+    cursor: pointer;
+}
+
+
+.file-upload-lbl:hover{
+    background-color: #5284a7;
+}
+
+.file-upload-lbl:active{
+    background-color: #304f63;
+}
+
+form button:disabled, form button:disabled:hover {
+    background-color: #cccccc;
+}
+
+.file-upload-lbl:disabled{
+    background-color: inherit;
+}
+
+.file-upload-lbl.disabled, form button:disabled{
+    border-color: #afafaf;
+}
+
+.fieldset-label {
+    font-size: 20px;
+    padding-left: 20px;
+    font-weight: bold;
+    color: #57a1d3;
+}
+
+fieldset {
+    border-left-style: none;
+    border-right-style: none;
+    border-bottom-style: none;
+    border-color: #6aabd7;
+    margin-inline-start: 0;
+    margin-inline-end: 0;
+    padding-block-start: 0.35em;
+    padding-inline-start: 0.75em;
+    padding-inline-end: 0.75em;
+    padding-block-end: 0.625em;
+}
+
+textarea {
+    resize: none;
+    margin: 3px;
+    font-size: 15px;
+}
+
+input[type="checkbox"] {
+    transform: scale(1.4);
+    cursor: pointer;
+}
+
+input[type="radio"]{
+    transform: scale(1.1);
+    cursor: pointer;
+}
+label input[type="checkbox"] {
+    margin: 6px 8px 6px 0.8%;
+}
+
+label input[type="radio"]{
+    margin-right: 6px;
+}
+
+.invalid {
+    border: 2px solid #ff6f6f;
+    border-radius: 2px;
+}
+
+input[type="number"], input[type="text"]{
+    display: inline-block;
+}
+
+div.div-margin {
+    margin: 10px 20px 0;
+}
+
+.leftColumn {
+    width: 15%;
+    border-right: 2px solid #5284a7;
+}
+
+.middleColumn{
+    width: 85%;
+}
+
+.rightColumn {
+    width: 20%;
+    border-left: 2px solid #5284a7;
+}
+
+.column {
+    float: left;
+    padding: 10px;
+}
+
+.statuscorrect {
+    list-style-type: none;
+    margin: 8px;
+    padding: 0;
+
+}
+
+.status-info {
+    text-align: right;
+    font-weight: bold;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+
+table {
+    border-collapse: collapse;
+    margin-left: 1%;
+    width: 80%;
+}
+
+
+* {
+    box-sizing: border-box;
+}
+
+
+.important-row {
+    border: 2px solid black;
+    border-radius: 20px 20px 0 0 ;
+    border-radius: 20px 20px 0 0 ;
+}
+
+.rightAligned {
+    float: right;
+    font-weight: bold;
+}
+
+ul.statuscorrect li {
+    border: 1px solid gray;
+    padding: 6px;
+    box-shadow: 0 0.5px 0 1px #a3a2a2;
+}
+
+ul.statuscorrect > :last-child {
+    border-radius: 0 0 5px 5px
+}
+
+ul.statuscorrect > :first-child {
+    border-radius: 5px 5px 0 0;
+    font-weight: bold;
+}
+
+
+.download-button {
+    display: none;
+}
+
+.enlarge {
+    transform: scale(1.4);
+}
+
+i.fa.fa-download span {
+    font-family:  "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+
+.button-small {
+    margin: 5px;
+    font-size: 15px;
+    width: 90%;
+}
+
+div.input-layer {
+    display: table;
+    width: 45%;
+    margin-left: 1%;
+    transition: width 0.5s ease-in-out;
+}
+
+.wider {
+    width: 65% !important;
+}
+
+div.input-layer-cust {
+    /*same as div.input-layer, but child element styling should be different*/
+    display: table;
+    width: 25%;
+    margin-left: 1%
+}
+
+
+div.input-layer label{
+    float: left
+}
+div.input-layer input, div.input-layer select, div.input-layer textarea{
+    float: right
+}
+
+div.input-layer input[type="number"]{
+    width: 23%;
+    direction: rtl;
+}
+
+div.input-layer input[type="number"].short, div.input-layer input[type="text"].short {
+    width: 10%;
+}
+
+div.input-layer select {
+    width: 28%;
+}
+
+input, div.input-layer select{
+    padding: 2px;
+}
+
+div.input-layer label {
+    margin-top: 6px;
+}
+
+.bigger {
+    width: 50%;
+}
+
+#database_type {
+    width: 40%;
+}
+
+
+#outputSectionExtractClusters div.input-layer input.custom-width, #outputSectionExtractClusters div.input-layer select.custom-width {
+    width: 34%;
+}
+
+div.scientificnotation-div {
+    float: right;
+    display: inherit;
+    margin-right: 3px;
+}
+
+.spaced::after, .spaced::before{
+    content: " ";
+}
+
+.error-message {
+    color: #ff4646;
+}
+
+@keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 100%}
+}
+
+@keyframes slideInvisible  {
+    from {width: 20%;}
+    to {width: 0}
+
+}
+
+@keyframes slideVisible {
+    from {width: 0}
+    to {width: 20%;}
+}
+
+#previousJobsOverview, #detailedPreviousJobs {
+    animation-name: fadeIn;
+    animation-duration: 0.7s;
+}
+
+.jobs {
+    font-size: 14px;
+    font-family: monospace;
+}
+
+.no-link-decoration{
+    color: black;
+    text-decoration: none;
+}
+
+div.input-layer img, .help-button {
+    cursor: pointer;
+    vertical-align: middle;
+    padding-left: 5px;
+    padding-top: 6px;
+}
+
+.slider-invisible {
+
+    animation-name: slideInvisible;
+    animation-duration: 2s;
+}
+
+.slider-visible {
+    animation-name: slideVisible;
+    animation-duration: 2s;
+}
+
+li.jobs a:visited, td a {
+    text-decoration: none;
+    color: blue;
+}
+
+.monospaced {
+    font-family: monospace;
+}
+
+.invisible {
+    transform: translateX(100%);
+    opacity: 0;
+    width: 0;
+    transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out, width 0.5s ease-in-out;
+}
+
+.visible {
+    display: block !important;
+    transform: translateX(0) !important;
+    width: 100%; /* as it is now part of another div */
+    opacity: 1 !important;
+    transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out, width 0.5s ease-in-out;
+}
+
+.shrink-it {
+    width: 65% !important;
+    transition: width 0.5s ease-in-out;
+}
+.enlarge-it {
+    width: 85%;
+    transition: width 0.5s ease-in-out;
+}
+
+.no-display {
+    display: none;
+}
+
+.no-padding {
+    padding: 0;
+}
+
+.wider-input {
+    width: 60% !important;
+    transition: width 0.5s ease-in-out;
+}
+
+.fade-out {
+    opacity: 0;
+    transition: opacity 0.2s ease-out;
+}
+
+.hide-overflow {
+    overflow: hidden;
+}
+
+.input-label, .select-label, .checkbox-label, .radio-label, .textarea-label{
+    color: #202020;
+    font-size: 15px;
+    margin-left: 1%;
+    font-weight: bold;
+}
+
+.radio-label {
+    font-weight: unset;
+}
+
+.radio-options {
+    margin-top: 0.5%;
+    margin-bottom: 0.5%;
+}
+
+div.radio-options label {
+    cursor: pointer;
+}
+
+.radio-margin{
+    margin-left: 1.2%;
+}
+
+.ncbi-entries{
+    margin: 0.5% 0 0 3%;
+}
+
+.checkbox-help{
+    padding-left: 2px;
+    padding-top: 0;
+}
+
+.multiselect-large{
+    width: 45%;
+    height: 80%;
+}
+
+.multiselect-small{
+    width: 25%;
+}
+
+.smaller-font{
+    font-size: 15px;
+}
+
+.selection-button{
+    margin-bottom: 1%;
+}
+
+.indent {
+    padding-left: 20px;
+}
+
+input[type="submit"]{
+    width: 40%;
+    float: unset !important;
+}
+
+.selector-custom-height {
+    height: 230px; /*could be different when more downstream modules become available*/
+}
+
+.job-display{
+    font-family: monospace;
+    font-size: 16px;
+}
+
+.downstream-div{
+    width: 20%;
+    border-bottom: 2px solid #5284a7
+}
+
+.downstream-div-height {
+    height: 310px;
+}
+
+.panel {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.34s ease-out;
+}
+
+.accordion{
+    cursor: pointer;
+}
+
+.example-button {
+    width: 80%;
+}
+
+#progress{
+    width: 15%;
+    height: 35px;
+    text-align: center;
+    line-height: 30px;
+    color: white;
+    background-color: #6aabd7;
+    font-weight: bold;
+
+}

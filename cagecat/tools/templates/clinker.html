@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% from "macros.html" import showNavigationBar %}
+{% from "macros.html" import result_table %}
+{% from "macros.html" import renderHelpButton %}
+{% from 'macros.html' import renderJobDetailsInput %}
+{% from 'macros.html' import showRequiredInputsText %}
+{% from 'macros.html' import renderForm %}
+
+{% block navigationBar %}
+    {{ showNavigationBar('analyze') }}
+{% endblock %}
+{% block scripts %}
+    addAccordionListeners();
+{% endblock %}
+
+{% block content %}
+
+<h2 class="indent">Visualization of all results</h2>
+{{  showRequiredInputsText() }}
+
+<div id="clinkerContent" class="moduleContent">
+    <form action="{{url_for('submit_job')}}" enctype="multipart/form-data" onsubmit="validateForm()"  method="post">
+        <input type="hidden" name="job_type" value="clinker"/>
+
+        <div>
+            <label class="fieldset-label" for="jobDetailsInputFieldset">Job description</label>
+            <fieldset id="jobDetailsInputFieldset">
+                {{ renderForm(all_forms.base.general.job_info) }}
+            </fieldset>
+        </div>
+
+        {% if prev_job_id is not none %}
+            <input type="hidden" name="clinkerEnteredJobId" value="{{ prev_job_id }}"/>
+        {% else %}
+            <label class="fieldset-label" for="clinkerInputSection">Input</label>
+            <fieldset id="clinkerInputSection">
+
+            <div class="div-margin" id="genomeFileUploadDiv">
+                <div>
+                    {{ renderForm(all_forms.input) }}
+                </div>
+
+                <br/>
+
+                <div>
+                    <span id="selectedFileName" style="margin-left:1%;"></span>
+                </div>
+
+                <div class="error-message no-display" id="fileUploadIncorExt">
+                    <span id="fileUploadIncorExtText"></span>
+                </div>
+
+{#                <label class="file-upload-lbl" for="fileUploadClinker">#}
+{#                    <input type="file" id="fileUploadClinker" name="fileUploadClinker" multiple="multiple"#}
+{#                           required="required" accept="{{ query_file_extensions }}" onchange="getGenBankFileNames()"/>Genome files*</label>#}
+{#                {{ renderHelpButton('fileUploadClinker') }}#}
+
+
+            </div>
+            {% endif %}
+        </fieldset>
+
+        <div>
+            <label class="fieldset-label" for="clinkerAlignmentSection">Alignment</label>
+            <fieldset id="clinkerAlignmentSection">
+                {{ renderForm(all_forms.base.alignment) }}
+            </fieldset>
+        </div>
+
+        <div>
+            <label class="fieldset-label" for="clinkerOutputSection">Output</label>
+            <fieldset id="clinkerOutputSection">
+                {{ renderForm(all_forms.base.output) }}
+            </fieldset>
+        </div>
+
+        <div>
+            <label class="fieldset-label" for="clinkerVisualiationSection">Additional options</label>
+            <fieldset id="clinkerVisualiationSection">
+                {{ renderForm(all_forms.base.additional_options) }}
+            </fieldset>
+        </div>
+
+        <div class="input-layer centered">
+            {{ all_forms.base.general.submit.submit }}
+        </div>
+
+    </form>
+</div>
+{% endblock %}

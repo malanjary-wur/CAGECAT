@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% from "macros.html" import showNavigationBar %}
+
+{% block navigationBar %}
+    {{ showNavigationBar('home') }}
+{% endblock %}
+
+{% block content %}
+    <div class="centered">
+        <h1>Welcome to CAGECAT</h1>
+        <h2>the online CompArative GEne Cluster Analysis Toolbox</h2>
+
+        <h4>Available entry points:</h4>
+        <div style="display: table;margin: auto;">
+            <div style="width: 50%;float: left;">
+                <h3>cblaster</h3>
+            </div>
+            <div style="width: 50%;float: left;">
+                <h3>clinker</h3>
+            </div>
+            <div style="width: 50%;float: left;">
+                <p>Homologous gene cluster searches</p>
+                <a href="{{ url_for('tools.cblaster_search') }}"><button style="width: 40%;" class="button">Start</button></a>
+                <a href="{{ url_for('tools.tools_explanation') }}"><button style="width: 40%" class="button">Explanation</button></a>
+
+                <div class="centered">
+                    <a target="_blank" href="https://dx.doi.org/10.1093/bioadv/vbab016"><button style="width: 40%;" class="button">Publication</button></a>
+                </div>
+
+                <p>Input types:</p>
+                <ul>
+                    <li>Protein sequences (FASTA)</li>
+                    <li>Gene cluster (GenBank)</li>
+                    <li>NCBI accessions</li>
+                    <li>HMM profile identifiers</li>
+                </ul>
+            </div>
+
+            <div style="width: 50%;float: left;">
+                <p style="white-space: nowrap;">Generating publication-quality gene cluster comparison figures</p>
+                <a href="{{ url_for('tools.clinker') }}"><button style="width: 40%" class="button">Start</button></a>
+                <a href="{{ url_for('tools.tools_explanation') }}"><button style="width: 40%" class="button">Explanation</button></a>
+
+                <div class="centered">
+                    <a target="_blank" href="http://dx.doi.org/10.1093/bioinformatics/btab007"><button style="width: 40%;" class="button">Publication</button></a>
+                </div>
+
+                <p>Input types:</p>
+                <ul>
+                    <li>Gene cluster (GenBank)</li>
+                </ul>
+            </div>
+        </div>
+
+        <br/>
+        <div>
+            <hr/>
+            <h4>Workflow of cblaster</h4>
+            <a target="_blank" href="https://dx.doi.org/10.1093/bioadv/vbab016">
+                <img height="450px" src="{{ url_for('static', filename='images/cblaster_workflow.svg') }}" alt="cblaster workflow"/>
+            </a>
+
+        </div>
+        <br/>
+    </div>
+{% endblock %}

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <title>CAGECAT</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" type="text/javascript"></script>
+    <script type="application/javascript"
+            src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}"></link>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+{% block head %}{% endblock %}
+</head>
+
+{% if help_enabled %}
+{% set onload = ";toggleExplanationColumn()" %}
+{% endif %}
+
+<body onload="showPreviousJobs(false);{{onload}};{% block scripts %}{% endblock %}determineHeight();">
+
+{% block navigationBar %}{% endblock %}
+<div class="flexbox-wrapper">
+    <div id="statusColumn" class="column leftColumn">
+
+        <ul class="statuscorrect">
+            <li>Server status:<span class="rightAligned" id="status_server">{{serv_info["server_status"]}}</span></li>
+            <li>Running:<span class="rightAligned" id="status_running">{{serv_info["running"]}}</span></li>
+            <li>Queued:<span class="rightAligned" id="status_queued">{{serv_info["queued"]}}</span></li>
+            <li>Completed:<span class="rightAligned" id="status_completed">{{serv_info["completed"]}}</span></li>
+        </ul>
+        <br/>
+        <div>
+            <ul class="statuscorrect" id="previousJobsOverview">
+            </ul>
+        </div>
+
+    </div>
+    <div class="column middleColumn enlarge-it no-padding" id="middleColumn">
+        <div id='consent' style='width:100%;background-color:#EEEEEE;text-align:center;'>
+            This website is free and open to all users and there is no login requirement. This site uses functional cookies only -
+            <a href='#' onclick="Cookies.set('consent',1);$('#consent').remove();return false;">I understand</a>
+        </div>
+        <script type="application/javascript">checkConsent();</script>
+        {% block content %}{% endblock %}
+    </div>
+</div>
+
+{% if help_enabled %}
+<button id="toggleHelpButton" style="position: absolute;top: 8%;right: 8px; z-index: 9000" onclick="toggleExplanationColumn()">&#60&#60</button>
+    <div class="hide-overflow">
+<div  class="column rightColumn invisible" id="explanationColumn">
+    <div id="filler" style="height: 0"></div>
+        <h2 id="explanationTitle">Explanation</h2>
+        <h4 id="explanationModule">Module: </h4>
+
+        <p id="explanationText">Click a question mark next to an input field to view its explanation.</p>
+
+    {% if show_examples %}
+        <div class="centered">
+            <button class="button example-button" onclick="setExampleInput('{{ show_examples }}')">Example input</button>
+            {% if show_examples == 'cblaster_search' %}
+                <a href="{{url_for('result.show_result', job_id='Y736N982T834D20') }}"><button class="button example-button">Example search output</button></a>
+            {% elif show_examples == 'clinker' %}
+                <a href="{{url_for('result.show_result', job_id='V139R332L449N10') }}"><button class="button example-button">Example clinker output</button></a>
+            {% else %}
+                <p>Incorrect examples. Please submit feedback to let the developers know something went wrong.</p>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+    </div>
+{% endif %}
+
+</body>
+</html>

@@ -1,0 +1,267 @@
+<!--Here we can have code block which are used more than once-->
+
+{% macro result_table(module, type) %}
+    {% set tableSection = '%s%sTableSection' % (module, type) %}
+    {% set tableDelim = '%s%sTableDelim' % (module, type) %}
+    {% set tableDecimals = '%s%sTableDecimals' % (module, type) %}
+    {% set tableHideHeaders = '%s%sTableHideHeaders' % (module, type) %}
+
+    <div>
+    <label class="fieldset-label"  for="{{ tableSection }}">
+        {{ 'Summary table' if type == 'Sum' else 'Binary table'}}</label>
+    <fieldset id="{{ tableSection }}">
+        <div class="input-layer">
+            <label class="input-label"
+                   for="{{ tableDelim }}">Delimiter</label>
+            {{ renderHelpButton('generalDelimiter') }}
+            <input class="short" type="text"
+                   id="{{ tableDelim }}"
+                   name="{{ tableDelim }}" size="1" maxlength="1"/>
+        </div>
+        <div class="input-layer">
+            <label class="input-label"
+                   for="{{ tableDecimals }}">Decimal places*</label>
+            {{ renderHelpButton('generalDecimals') }}
+            <input class="short"  type="number"
+                   id="{{ tableDecimals }}"
+                   name="{{ tableDecimals }}" value="2" step="1" min="0" max="9"
+                   required="required"/>
+        </div>
+
+        <div>
+            <label class="checkbox-label">
+                <input type="checkbox"
+                       id="{{ tableHideHeaders }}"
+                       name="{{ tableHideHeaders }}">Hide headers</input>
+            </label>
+            {{ renderHelpButton('generalHideHeaders', True) }}
+        </div>
+
+        {% if type == 'Bin' %}
+            <div class="input-layer">
+                <label class="select-label" for="keyFunction">Key function*</label>
+                {{ renderHelpButton('keyFunction') }}
+                <select class="select-options" name="keyFunction" id="keyFunction" required="required" onchange="changeHitAttribute()">
+                    <option name="functionLen" value="len">len</option>
+                    <option name="functionSum" value="sum">sum</option>
+                    <option name="functionMax" value="max">max</option>
+                </select>
+            </div>
+
+            <div class="input-layer">
+                <label class="select-label" for="hitAttribute">Hit attribute</label>
+                {{ renderHelpButton('hitAttribute') }}
+                <select class="select-options" name="hitAttribute" id="hitAttribute" disabled="disabled">
+                    <option name="hitAttrIdentity" value="identity">identity</option>
+                    <option name="hitAttrCoverage" value="coverage">coverage</option>
+                    <option name="hitAttrBitscore" value="bitscore">bitscore</option>
+                    <option name="hitAttrEValue" value="evalue">e-value</option>
+                </select>
+            </div>
+
+        {% endif %}
+    </fieldset>
+    </div>
+{% endmacro %}
+
+{#TODO: remove lines above as not used anymore#}
+
+{% macro filtering_section(extraction_type, selected_scaffolds, selected_queries_or_cluster_numbers) %}
+    <div>
+    <label class="fieldset-label" for="filteringSection">Filtering</label>
+    <fieldset id="filteringSection">
+        <div class="input-layer">
+            <label class="input-label" for="selectedOrganisms">Organisms</label>
+            {{ renderHelpButton('selectedOrganisms') }}
+            <input class="bigger" type="text" id="selectedOrganisms" name="selectedOrganisms" placeholder="Organisms to filter for"/>
+        </div>
+    {# Below code intentionally left in if scaffolds are wished to be implemented in a future release #}
+        {#        <div class="input-layer">#}
+        {#            <label class="textarea-label" for="selectedScaffolds">Scaffolds</label>#}
+        {#            {{ renderHelpButton('selectedScaffolds') }}#}
+        {#            <textarea cols="30" rows="8" id="selectedScaffolds" name="selectedScaffolds" placeholder="Scaffolds to filter for">{{selected_scaffolds if selected_scaffolds is not none}}</textarea>#}
+        {#        </div>#}
+
+        {% if extraction_type == 'sequences' %}
+            <div class="input-layer">
+
+                <label class="textarea-label" for="selectedQueries">Queries</label>
+                {{ renderHelpButton('selectedQueries') }}
+                {{ showSelectedClusters(selected_queries_or_cluster_numbers, False, True) }}
+                <input type="hidden" name="selectedQueries" value="{{ selected_queries_or_cluster_numbers|join(' ') }}"/>
+            </div>
+        {% elif extraction_type == 'clusters' %}
+            <div class="input-layer">
+                <label class="input-label" for="clusterNumbers">Clusters</label>
+                {{ renderHelpButton('clusterNumbers') }}
+                <input type="text" readonly="readonly" name="clusterNumbers" id="clusterNumbers" value="{{selected_queries_or_cluster_numbers}}"/>
+            </div>
+            <div class="input-layer">
+                <label class="input-label" for="clusterScoreThreshold">Score threshold</label>
+                {{ renderHelpButton('clusterScoreThreshold') }}
+                <input type="number" step="0.001" name="clusterScoreThreshold" id="clusterScoreThreshold"/>
+            </div>
+        {% endif %}
+
+    </fieldset>
+    </div>
+{% endmacro %}
+
+{% macro create_scientific_input(label, type, default_value) %}
+    <div style="display: table;width: 25%;margin-left: 1%">
+        {#TODO future: change style as it is not user-friendly yet#}
+        <input type="hidden" name="{{type.lower()}}" id="{{type.lower()}}" value=""/>
+
+        <label class="input-label" for="base{{type}}">{{label}}</label>
+        <div class="scientificnotation-div">
+            <input type="number" id="base{{type}}" step="0.01" min="1" max="9.99" value="1"/>
+            {{ renderHelpButton(type.lower()) }}
+            <span class="spaced">E<sup><span id="power{{type}}">{{default_value}}</span></sup></span>
+            <button type="button" class="scientificnotation" onclick="changePower(-1, 'power{{type}}')">&#9660</button>
+            <button type="button" class="scientificnotation" onclick="changePower(1, 'power{{type}}')">&#9650</button>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro showNavigationBar(page)  %}
+    <div id="navigationBar">
+    <ul class="nav">
+        <li><a {{ '' if page != 'home' else 'class=active' }} href="{{url_for('home_page')}}">Home</a></li>
+        <li><a {{ '' if page != 'analyze' else 'class=active' }} href="{{ url_for('tools.tools_explanation') }}">Analyze</a></li>
+        <li><a {{ '' if page != 'results' else 'class=active' }} href="{{url_for('result.result_from_job_id')}}">Results</a></li>
+        <li class="right-nav"><a {{ '' if page != 'help' else 'class=active' }} href="{{ url_for('help_page') }}">Contact / Help</a></li>
+        <li class="right-nav"><a {{ '' if page != 'feedback' else 'class=active' }} href="{{ url_for('feedback.feedback_page') }}">Feedback</a></li>
+        <li class="right-nav"><a {{ '' if page != 'tools' else 'class=active' }} href="{{ url_for('tools.tools_page') }}">Available tools</a></li>
+    </ul>
+    </div>
+{% endmacro %}
+
+{% macro renderHelpButton(help_type, for_checkbox) %}
+    <img class="help-button{{ " checkbox-help" if for_checkbox else "" }}" onclick="showHelp('{{ help_type }}')"
+         src="{{ url_for('static', filename='images/question-circle.svg') }}"/>
+{% endmacro %}
+
+{% macro showSelectedClusters(headers, show_title, is_for_filtering) %}
+    {% if show_title %}
+        <h3 class="indent">Overview of selected clusters</h3>
+    {% endif %}
+
+    <ul>
+    {% if headers|length == 1 %}
+        {% if is_for_filtering %}
+            <li>No filtering on queries</li>
+        {% elif not headers[0] %}
+            <li>All clusters are selected</li>
+        {% else %}
+            <li>{{ headers[0] }}</li>
+        {% endif %}
+    {% endif %}
+
+    {% if headers|length != 1 %}
+        {% for header in headers %}
+            <li>{{header}}</li>
+        {% endfor %}
+    {% endif %}
+    </ul>
+{% endmacro %}
+
+{% macro renderHelpTexts(texts) %}
+    {% for paragraph_title, content in texts %}
+        {% if paragraph_title %}
+            {% if paragraph_title == 'list' %}
+                <ol>
+                {% for point in content %}
+                    <li>{{ point }}</li>
+                {% endfor %}
+                </ol>
+            {% else %}
+                <h4>{{ paragraph_title }}</h4>
+                <p>{{ content }}</p>
+            {% endif %}
+        {% endif %}
+
+        {% if not paragraph_title %}
+            <p>{{ content }}</p>
+        {% endif %}
+    {% endfor %}
+{% endmacro %}
+
+{% macro renderJobDetailsInput() %}
+    <div>
+    <label class="fieldset-label" for="jobDetailsInputFieldset">Job description</label>
+    <fieldset id="jobDetailsInputFieldset">
+        <div class="input-layer">
+            <label class="input-label">Job title</label>
+            <input name="job_title" id="job_title" type="text" maxlength="60" placeholder="Experiment no. 19A82M"/>
+            {{ renderHelpButton('job_title') }}
+        </div>
+
+        <div class="input-layer">
+            <label class="input-label">Email address for notification</label>
+            <input name="email" type="email" maxlength="100"/>
+            {{ renderHelpButton('email_notification') }}
+        </div>
+    </fieldset>
+    </div>
+{% endmacro %}
+
+{% macro showRequiredInputsText() %}
+<p class="indent">Input fields with an * are required. If you don't know what value you should use, use the default value.</p>
+{% endmacro %}
+
+{% macro showBookMarkButton() %}
+    <input class="button" style="margin-top: 1%; text-align: center" onclick="alert('Press CTRL + D to bookmark this page')" value="Bookmark this page"/>
+{% endmacro %}
+
+{% macro renderForm(form, additional_data=None) %}
+    {% for field in form %}
+        {% set is_hidden_field = field.type == 'HiddenField' %}
+        {% set classes = field.render_kw.class %}
+
+        {% if not classes %}
+            {% set classes = "bigger" %}
+        {% endif %}
+
+        {% if not is_hidden_field %}
+
+            {% if field.type == 'BooleanField' %}
+                <div>
+                    <label class="checkbox-label">
+                        {{ field }}{{ field.label.text }}
+                    </label>
+                    <img class="help-button checkbox-help" onclick="showHelp('{{ field.description }}')" src="/static/images/question-circle.svg">
+
+            {% elif field.type in ('MultipleFileField', 'FileField') %}
+                <div>
+                    <label class="file-upload-lbl" for="{{ field.id }}">
+                        {{ field }}{{ field.label.text }}{% if field.flags.required %}*{% endif %}
+                    </label>
+                    <img class="help-button checkbox-help" onclick="showHelp('{{ field.description }}')" src="/static/images/question-circle.svg">
+                </div>
+
+            {% else %}
+                <div class="input-layer">
+                {{ field.label(class="input-label") }}{% if field.flags.required %}*{% endif %}
+                <img class="help-button" onclick="showHelp('{{ field.description }}')" src="/static/images/question-circle.svg">
+                    {% if additional_data is not none and field.id == 'clusterNumbers' %} {# clusterNumbers can be replaced by a tuple of which id's should have additional data filled in  #}
+                {{ field(class=classes, value=additional_data) }}
+                    {% else %}
+                {{ field(class=classes) }}
+                    {% endif %}
+
+            {% endif %}
+
+    {#            TODO: use renderHelpButton macro here #}
+
+        {% endif %}
+
+
+        {% if not is_hidden_field %}
+            </div>
+        {% else %}
+            {{ field }}
+        {% endif %}
+
+
+    {% endfor %}
+{% endmacro %}

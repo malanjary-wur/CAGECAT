@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% from "macros.html" import showNavigationBar %}
+{% from "macros.html" import showBookMarkButton %}
+
+
+{% block navigationBar %}
+    {{ showNavigationBar('results') }}
+{% endblock %}
+
+{% block content %}
+    <div class="indent">
+        {% if job_title %}
+            <h2>{{ job_title }}</h2>
+        {% endif %}
+
+        <h3>{{ module }} ({{ j_id }})</h3>
+
+        <p>Job {{j_id}} has failed during execution due to the following:</p>
+        {% if (failure_reason == 'Unknown failure reason.' or failure_reason == "Command construction failed (no log file).") %}
+            <p><b>{{ failure_reason }} <a href="{{ url_for('feedback.feedback_page', job_id=j_id) }}">Please submit feedback by clicking this sentence.</a></b></p>
+        {% else %}
+            <p><b>{{ failure_reason }}</b></p>
+        {% endif %}
+        <p>You are able to download your log files by clicking the button below.</p>
+
+        <form action="{{ url_for('result.return_user_download', job_id=j_id) }}" method="post"
+              enctype="multipart/form-data" name="download_settings">
+            <input name="job_id" type="hidden" value="{{j_id}}"/>
+
+            <label style="margin-top: 1%;" class="button" for="download-button"><i class="fa fa-download"><span> Download results</span></i></label>
+            <input id="download-button" class="download-button" type="submit"></input>
+            {{ showBookMarkButton() }}
+        </form>
+    </div>
+{% endblock %}

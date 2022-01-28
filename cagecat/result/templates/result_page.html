@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+{% from "macros.html" import showNavigationBar %}
+{% from "macros.html" import renderHelpButton %}
+{% from "macros.html" import showBookMarkButton %}
+
+
+{% block navigationBar %}
+    {{ showNavigationBar('results') }}
+{% endblock %}
+
+{% block content %}
+    <div>
+        <div class="indent">
+        {% if job_title %}
+            <h2>{{ job_title }}</h2>
+        {% endif %}
+            <h3>{{ module }} ({{ j_id }})</h3>
+            <p>Current status: <b>{{ status }}</b></p>
+
+            <form action="{{ url_for('result.return_user_download', job_id=j_id) }}" method="post"
+                  enctype="multipart/form-data" name="download_settings">
+                <input name="job_id" type="hidden" value="{{j_id}}"/>
+
+                <label style="margin-top: 1%;" class="button" for="download-button"><i class="fa fa-download"><span> Download results</span></i></label>
+                <input id="download-button" class="download-button" type="submit"></input>
+
+                {{ showBookMarkButton() }}
+            </form>
+        </div>
+
+    {% if connected_jobs %}
+        <div style="margin-top: 1%" id="connectedJobsCheckbox">
+            <label class="checkbox-label" for="connectedJobsToggle">
+                <input type="checkbox" id="connectedJobsToggle" onclick="toggleElementVisibility('connectedJobs')"/>Show linked jobs
+            </label>
+        </div>
+
+    <div id="connectedJobs" class="no-display indent">
+        <table>
+            <tr>
+                <th>Job ID</th>
+                <th>Title</th>
+                <th>Module</th>
+                <th>Status</th>
+                <th>Category</th>
+            </tr>
+
+        {% for id, title, module, status, job_category in connected_jobs %}
+            <tr>
+                <td class="job-display"><a href="{{ url_for('result.show_result', job_id=id) }}">{{ id }}</a></td>
+                <td>{{ title }}</td>
+                <td>{{ module }}</td>
+                <td>{{ status }}</td>
+                <td>{{ job_category }}</td>
+            </tr>
+        {% endfor %}
+        </table>
+    </div>
+    {% endif %}
+
+{% if downstream_modules %}
+            <div class="partly-height">
+    <div style="border-top: 2px solid #5284a7;">
+            <div class="column leftColumn downstream-div downstream-div-height" id="downStreamModulesDiv">
+
+        {% if 'recompute' in downstream_modules %}
+            <a href="{{url_for('tools.cblaster_search', prev_run_id=j_id)}}?type=recompute&resetQueries=0"><button class="button button-small">Recompute</button></a>
+        {% endif %}
+
+        {% if 'gne' in downstream_modules %}
+            <form action="{{url_for('tools.gene_neighbourhood_estimation')}}" method="post">
+                <input type="hidden" name="job_id" value="{{ j_id }}"/>
+                <button class="button button-small" type="submit">Gene neighbourhood estimation</button>
+            </form>
+        {% endif %}
+
+        {% if 'extract_sequences' in downstream_modules %}
+            <form action="{{url_for('tools.extract_sequences')}}" method="post" onsubmit="addSelectedToForm('sequences')">
+                <input type="hidden" name="job_id" value="{{j_id}}"/>
+                <input type="hidden" id="selectedQueries" name="selectedQueries" value=""/>
+                <input type="hidden" id="selectedClusters" name="selectedClusters" value=""/>
+                <button class="button button-small" type="submit">Extract sequences</button>
+            </form>
+        {% endif %}
+
+        {% if 'extract_clusters' in downstream_modules %}
+            <form action="{{url_for('tools.extract_clusters')}}" method="post" onsubmit="addSelectedToForm('clusters')">
+                <input type="hidden" name="job_id" value="{{j_id}}"/>
+                <input type="hidden" name="selectedClusters" id="selectedClusters1" value=""/>
+                <button class="button button-small" type="submit">Extract clusters</button>
+            </form>
+        {% endif %}
+
+        {% if 'clinker_query' in downstream_modules %}
+            <form action="{{url_for('tools.clinker_query')}}" method="post" onsubmit="addSelectedToForm('clinker_query')">
+                <input type="hidden" name="job_id" value="{{j_id}}"/>
+                <input type="hidden" name="selectedClusters" id="selectedClusters3" value=""/>
+                <button class="button button-small" type="submit">Visualize compared to query</button>
+            </form>
+
+        {% endif %}
+
+        {% if 'clinker' in downstream_modules %}
+            <form action="{{url_for('tools.clinker')}}" method="post">
+                <input type="hidden" name="job_id" value="{{ j_id }}"/>
+                <button class="button button-small" type="submit">clinker: visualize everything</button>
+            </form>
+{#            <a href="{{url_for('home_page', prev_run_id=j_id)}}?type=visualization"><button class="button button-small">Visualize everything</button></a>#}
+        {% endif %}
+
+
+{#        {% if 'corason' in downstream_modules %}#}
+{#    <form action="{{ url_for('tools.corason')}}" method="post" onsubmit="addSelectedToForm('corason')">#}
+{#        <input type="hidden" name="job_id" value="{{j_id}}"/>#}
+{#        <input type="hidden" name="selectedQuery" id="selectedQuery" value=""/>#}
+{#        <input type="hidden" name="selectedClusters" id="selectedClusters2" value=""/>#}
+{#        <input type="hidden" name="unselectedClusters" id="unselectedClusters2" value=""/>#}
+{#        <input type="hidden" name="selectedReferenceCluster" id="referenceCluster" value=""/>#}
+{#        <button class="button button-small" type="submit" id="corasonSubmit" disabled="disabled">CORASON</button>#}
+{#    </form>#}
+{#        {% endif %}#}
+
+            </div>
+    {% if module != 'extract_clusters' %}
+        <div class="column middleColumn downstream-div-height" id="middleColumnDiv" style="border-bottom: 2px solid #5284a7;width: 80%;">
+    {% endif %}
+
+    {% endif %}
+
+    {% if module in modules_with_plots %}
+        {% if module not in ('clinker', 'gne') %}
+        <div>
+            <div class="centered">
+                <button class="button smaller" id="selectClusterButton" onclick="showSelection('cluster')">Select clusters (0)</button>
+            {% if module != 'clinker_query' %}
+                <button class="button smaller" id="selectQueryButton" onclick="showSelection('query')">Select queries (0)</button>
+            {% endif %}
+                {#                {{ renderHelpButton('downstream_select') }}#}
+            </div>
+
+            <div>
+                <div class="centered" id="clusterSelection">
+
+                    <select id="unselectedClustersSelector" class="multiselect-large selector-custom-height" multiple="multiple">
+                    </select>
+
+                    <button onclick="moveSelectedElements('unselected', 'Clusters')"><<</button>
+                    <button onclick="moveSelectedElements('selected', 'Clusters')">>></button>
+
+                    <select id="selectedClustersSelector" class="multiselect-large selector-custom-height" multiple="multiple">
+                        {#                        <option>ads</option>#}
+                    </select>
+                </div>
+
+            {% if module != 'clinker_query' %}
+                <div id="queriesSelection" class="centered no-display">
+                    <select id="unselectedQueriesSelector" multiple="multiple" class="multiselect-small selector-custom-height">
+                    </select>
+
+                    <button onclick="moveSelectedElements('unselected', 'Queries')"><<</button>
+                    <button onclick="moveSelectedElements('selected', 'Queries')">>></button>
+
+                    <select id="selectedQueriesSelector" multiple="multiple" class="multiselect-small selector-custom-height">
+                        {#            <option></option>#}
+                    </select>
+                </div>
+            {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+<div style="margin: auto;width: 60%;">
+
+    <p style="display: inline-block;padding-left: 10px;"  id="resultLoadedMessage">Result is being loaded.. File size: {{ content_size }}</p>
+    <img id="loadingImage" style="vertical-align: middle; width: 80px; height: auto;" src="{{ url_for('static', filename='images/dna_loader.gif') }}" alt="loading"/>
+</div>
+    {% if module in ['search', 'recompute'] %}
+        {% set onload = 'getOutputFromPlot("search");' %}
+    {% elif module == 'clinker_query' %}
+        {% set onload = 'getOutputFromPlot("visualize");' %}
+    {% elif module == 'clinker' %}
+        {% set onload = '' %}
+        {% for connected_job in connected_jobs %}
+            {% if connected_job[3] == 'depending' %}
+                <p style="padding-left: 30px;"> <a href="{{ url_for('result.return_user_download', job_id=connected_job[0]) }}">Click this sentence to download the sequences of the clusters shown below.</a></p>
+            {% endif %}
+        {% endfor %}
+
+    {% elif module == 'gne' %}
+        {% set onload = '' %}
+    {% endif %}
+
+    {% set mergedOnload = onload + 'postLoadingIFrame()' %}
+
+<iframe onload="showPreviousJobs(true)" class="no-display"></iframe> {# Dummy frame to load previous jobs before potentially large file is downloaded #}
+    <iframe onload="{{mergedOnload}}" height="800" id="newWindow" src="{{ url_for('result.get_plot_contents', job_id=j_id) }}" title="Generated HTML plot"></iframe>
+</div>
+        {% endif %}
+
+{% endblock %}

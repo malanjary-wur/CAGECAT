@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% from "macros.html" import showNavigationBar %}
+{% from "macros.html" import renderHelpButton %}
+{% from 'macros.html' import renderJobDetailsInput %}
+{% from 'macros.html' import showRequiredInputsText %}
+
+{% block navigationBar %}
+{{ showNavigationBar('analyze') }}{% endblock %}
+
+{% block content %}
+    <div>
+        <h2 class="indent">BiG-SCAPE</h2>
+        {{  showRequiredInputsText() }}
+
+        <form action="{{ url_for('submit_job') }}" method="post">
+            <input type="hidden" name="job_type" value="big_scape"/>
+            {{ renderJobDetailsInput() }}
+
+            <label class="fieldset-label" for="clustering-fieldset">Clustering</label>
+            <fieldset id="clustering-fieldset">
+
+                <div>
+                    <label class="checkbox-label">
+                        <input id="singletons" name="include_singletons" type="checkbox"/>Include singletons
+                    </label>
+                    {{ renderHelpButton('big_scape-singletons', True) }}
+                </div>
+
+                <div class="input-layer">
+                    <label class="input-label" for="domain_overlap_cutoff">Domain overlap cutoff*</label>
+                    {{ renderHelpButton('big_scape-domain_overlap_cutoff') }}
+                    <input required="required" id="domain_overlap_cutoff" name="domain_overlap_cutoff" type="number" value="0.1"/>
+                </div>
+
+                <div class="input-layer">
+                    <label class="input-label" for="min_bgc_size">Min. BGC size*</label>
+                    {{ renderHelpButton('big_scape-min_bgc_size') }}
+                    <input required="required" id="min_bgc_size" name="min_bgc_size" type="number" value="0"/>
+                </div>
+
+                <div>
+                    <label class="checkbox-label">
+                        <input id="hybrids" type="checkbox"/>Hybrids off
+                    </label>
+                    {{ renderHelpButton('big_scape-hybrids') }}
+                </div>
+
+            </fieldset>
+
+            <label class="fieldset-label" for="classification-fieldset">Classification</label>
+            <fieldset id="classification-fieldset">
+                <div>
+                    <label class="checkbox-label">
+                        <input name="mix" type="checkbox"/>Mix
+                    </label>
+                    {{ renderHelpButton('big_scape-mix', True) }}
+                </div>
+
+                <div>
+                    <label class="checkbox-label">
+                        <input id="classify" type="checkbox"/>No classify
+                    </label>
+                    {{ renderHelpButton('big_scape-classify', True) }}
+                </div>
+
+                <div class="input-layer">
+                    <label class="select-label" for="banned_classes">Banned classes</label>
+                    {{ renderHelpButton('big_scape-') }}
+                    <select style="width: 40%;" multiple="multiple" name="banned_classes" id="banned_classes">
+                        <option value="PKSI">PKSI</option>
+                        <option value="PKSother">PKSother</option>
+                        <option value="NRPS">NRPS</option>
+                        <option value="RiPPs">RiPPs</option>
+                        <option value="Saccharides">Saccharides</option>
+                        <option value="Terpene">Terpene</option>
+                        <option value="PKS-NRP_Hybrids">PKS-NRP Hybrids</option>
+                        <option value="Others">Others</option>
+                    </select>
+                </div>
+            </fieldset>
+
+            <label class="fieldset-label" for="network-cutoffs-fieldset">Network cutoffs</label>
+            <fieldset id="network-cutoffs-fieldset">
+                <div class="input-layer">
+                    <label class="input-label" for="cutoffs">Cutoffs</label>
+                    {{ renderHelpButton('big_scape-cutoffs') }}
+                    <input id="cutoffs" name="cutoffs" type="text" value="0.3" pattern="\d\.\d+"/>
+    {#                Multiple numbers are allowed, separated by spaces#}
+                </div>
+
+                <div>
+                    <label class="checkbox-label" >
+                        <input onchange="$('#clan_cutoff')[0].toggleAttribute('disabled');" name="clans_off" type="checkbox"/>Clans off
+                    </label>
+                    {{ renderHelpButton('big_scape-clans_off', True) }}
+                </div>
+
+                <div class="input-layer">
+                    <label class="input-label" for="clan_cutoff">Clan cutoff</label>
+                    {{ renderHelpButton('big_scape-clan_cutoff') }}
+                    <input onfocusout="checkClanCutoffValues();" type="text" pattern="\d.\d+ \d.\d+" name="clan_cutoff" id="clan_cutoff" value="0.3 0.7"/>
+                </div>
+            </fieldset>
+
+            <label for="mibig-fieldset" class="fieldset-label">Use BGCs from MIBiG</label>
+            <fieldset id="mibig-fieldset">
+
+                <div>
+                    <label class="checkbox-label">
+                        <input name="mibig" type="checkbox"/>Use MIBiG 2.1
+                    </label>
+                    {{ renderHelpButton('big_scape-mibig', True) }}
+                </div>
+
+                <div>
+                    <label class="checkbox-label">
+                        <input name="mibig14" type="checkbox"/>Include MIBiG 1.4
+                    </label>
+                    {{ renderHelpButton('big_scape-mibig14', True) }}
+                </div>
+
+                <div>
+                    <label class="checkbox-label">
+                        <input name="mibig13" type="checkbox"/>Include MIBiG 1.3
+                    </label>
+                    {{ renderHelpButton('big_scape-mibig13', True) }}
+                </div>
+            </fieldset>
+
+            <label class="fieldset-label" for="other-fieldset">Other</label>
+            <fieldset id="other-fieldset">
+                <div class="input-layer">
+                    <label for="big_scape-label" class="input-label">Label</label>
+                    {{ renderHelpButton('big_scape-label') }}
+                    <input id="big_scape-label" name="label" type="text"/>
+                </div>
+
+                <div class="input-layer">
+                    <label class="select-label" for="mode">Mode</label>
+                    {{ renderHelpButton('big_scape-mode') }}
+                    <select class="select-options" id="mode" name="mode">
+                        <option value="global">global</option>
+                        <option value="glocal">glocal</option>
+                        <option value="auto">auto</option>
+                    </select>
+                </div>
+
+                <div class="input-layer">
+                    <label class="select-label" for="query_bgc">Query BGC</label>
+                    {{ renderHelpButton('big_scape-query_bgc') }}
+                    <select class="select-options" id="query_bgc" name="query_bgc">
+                        <option>TODO</option>
+                        {# TODO future: add selected clusters programmatically#}
+                    </select>
+                </div>
+
+            </fieldset>
+
+            <div class="input-layer centered">
+                <input class="button" value="Submit" type="submit"/>
+            </div>
+
+        </form>
+    </div>
+
+{% endblock %}

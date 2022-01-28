@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% from "macros.html" import filtering_section %}
+{% from "macros.html" import showNavigationBar %}
+{% from "macros.html" import renderHelpButton %}
+{% from "macros.html" import showSelectedClusters %}
+{% from 'macros.html' import renderJobDetailsInput %}
+{% from 'macros.html' import showRequiredInputsText %}
+{% from 'macros.html' import renderForm %}
+
+{% block navigationBar %}
+    {{ showNavigationBar('analyze') }}
+{% endblock %}
+
+{% block content %}
+    <h2 class="indent">Extract clusters</h2>
+    {{  showRequiredInputsText() }}
+
+<form action="{{url_for('submit_job')}}" method="post">
+
+    <input type="hidden" name="job_type" value="extract_clusters"/>
+    <input type="hidden" name="prev_job_id" value="{{prev_job_id}}"/>
+
+    <div>
+        <label class="fieldset-label" for="jobDetailsInputFieldset">Job description</label>
+        <fieldset id="jobDetailsInputFieldset">
+            {{ renderForm(all_forms.general.job_info) }}
+        </fieldset>
+    </div>
+
+    <div>
+        <label class="fieldset-label" for="filteringSection">Filtering</label>
+        <fieldset id="filteringSection">
+            {{ renderForm(all_forms.filtering, cluster_numbers) }}
+        </fieldset>
+    </div>
+
+{#    {{ filtering_section('clusters', selected_scaffolds, cluster_numbers) }}#}
+
+    <label class="fieldset-label" for="outputSectionExtractClusters">Output</label>
+    <fieldset id="outputSectionExtractClusters">
+        {{ renderForm(all_forms.output) }}
+    </fieldset>
+
+    <div>
+        {{ showSelectedClusters(cluster_headers, True, False) }}
+    </div>
+
+    {% if prev_job_type == 'clinker_query' %}
+        <b><p class="indent">Note that when your previous job was a clinker_query one, all cluster hits of the <a href="{{ url_for('result.show_result', job_id=main_search_id) }}">main search job</a> will be extracted.</p></b>
+    {% endif %}
+    <div class="input-layer centered">
+        {{ all_forms.general.submit.submit }}
+    </div>
+</form>
+        {% endblock %}

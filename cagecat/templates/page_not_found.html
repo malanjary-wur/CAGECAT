@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% from "macros.html" import showNavigationBar %}
+
+{% block navigationBar %}
+    {{ showNavigationBar('') }}
+{% endblock %}
+
+{% block content %}
+    <div class="indent">
+        <br/>
+        <p>The page you tried to reach was not found. If you think this is a problem on CAGECAT, <a href="{{ url_for('feedback.feedback_page', job_id=j_id) }}">please submit feedback by clicking this sentence.</a></p>
+    </div>
+
+{% endblock %}

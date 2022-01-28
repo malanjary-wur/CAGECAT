@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% from "macros.html" import showNavigationBar %}
+{% from "macros.html" import result_table %}
+{% from "macros.html" import renderHelpButton %}
+{% from 'macros.html' import renderJobDetailsInput %}
+{% from 'macros.html' import showRequiredInputsText %}
+{% from 'macros.html' import renderForm %}
+
+{% block navigationBar %}
+    {{ showNavigationBar('analyze') }}
+{% endblock %}
+
+{% block content %}
+    <h2 class="indent">Gene neighbourhood estimation</h2>
+    {{  showRequiredInputsText() }}
+
+    <div id="gneModuleContent" class="moduleContent">
+        <form method="post" enctype="multipart/form-data" action="{{url_for('submit_job')}}"
+              name="gneOptionForm">
+            <input type="hidden" name="job_type" value="gne" required="required"/>
+            <input type="hidden" name="gneEnteredJobId" value="{{ prev_job_id }}"/>
+
+{#            {{ renderJobDetailsInput() }}#}
+
+            <div>
+                <label class="fieldset-label" for="jobDetailsInputFieldset">Job description</label>
+                <fieldset id="jobDetailsInputFieldset">
+                    {{ renderForm(all_forms.general.job_info) }}
+                </fieldset>
+            </div>
+
+
+            <div>
+                <label class="fieldset-label" for="searchSumTableSection">Summary table</label>
+                <fieldset id="searchSumTableSection">
+                    {{ renderForm(all_forms.summary_table) }}
+                </fieldset>
+            </div>
+
+
+            <label class="fieldset-label" for="gneOptions">Additional options</label>
+            <fieldset id="gneOptions">
+                {{ renderForm(all_forms.additional_options) }}
+            </fieldset>
+
+            <div class="input-layer centered">
+                {{ all_forms.general.submit.submit }}
+            </div>
+        </form>
+    </div>
+
+{% endblock %}

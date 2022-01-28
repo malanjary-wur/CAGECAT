@@ -1,0 +1,18 @@
+{#Within this file are unused macro's or pieces of HTML for potential future usage#}
+
+{% macro show_options(settings) %}
+    {#  currently not used anymore, could be removed/used in the future. #}
+    <label for="optionsList">Selected options</label>
+    <ul id="optionsList">
+        {% for label, option in settings.items() %}
+            <li>{{label}}: {{option}}</li>
+        {% endfor %}
+    </ul>
+{% endmacro %}
+
+{% macro createBackButton() %}
+    {#  currently not used anymore, could be removed/used in the future. #}
+    <div class="indent">
+        <button class="button smaller" onclick="lastPage();">Previous page</button>
+    </div>
+{% endmacro %}

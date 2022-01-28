@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% from "macros.html" import showNavigationBar %}
+{% from "macros.html" import renderHelpTexts %}
+
+{% block navigationBar %}
+    {{ showNavigationBar('analyze') }}
+{% endblock %}
+
+{% block scripts %}addAccordionListeners();{% endblock %}
+
+{% block content %}
+    <div style="margin-top: 2%" class="indent">
+        Click a downstream module to view its explanation.
+    </div>
+
+    <div class="indent">
+    <h2 class="accordion">cblaster: homologous gene cluster searches</h2>
+        <div class="panel" id="cblaster_search_div">
+            {{ renderHelpTexts(helps['cblaster_search']) }}
+        </div>
+        <div class="indent">
+            <h3 class="accordion">- Recompute</h3>
+            <div class="panel" id="recompute">
+                {{ renderHelpTexts(helps['recompute']) }}
+            </div>
+
+            <h3 class="accordion">- Gene Neighbourhood Estimation</h3>
+            <div class="panel" id="neighbourhood_estimation">
+                {{ renderHelpTexts(helps['neighbourhood_estimation']) }}
+            </div>
+
+            <h3 class="accordion">- Extract sequences</h3>
+            <div class="panel" id="extract_sequences">
+                {{ renderHelpTexts(helps['extract_sequences']) }}
+            </div>
+
+            <h3 class="accordion">- Extract clusters</h3>
+            <div class="panel" id="extract_clusters">
+                {{ renderHelpTexts(helps['extract_clusters']) }}
+            </div>
+
+            <h3 class="accordion">- Visualization with query clusters</h3>
+            <div class="panel" id="cblaster_query_visualization">
+                {{ renderHelpTexts(helps['cblaster_query_visualization']) }}
+            </div>
+        </div>
+
+    <h2 class="accordion">clinker: generating publication-quality gene cluster comparison figures</h2>
+    <div class="panel" id="clinker_visualization">
+        {{ renderHelpTexts(helps['clinker_visualization']) }}
+    </div>
+
+{#    <h2 class="accordion">CORASON</h2>#}
+{#    <div class="panel" id="corason">#}
+{#        {{ renderHelpTexts(helps['corason']) }}#}
+{#    </div>#}
+{#        TODO future: add explanation#}
+
+    </div>
+{% endblock %}

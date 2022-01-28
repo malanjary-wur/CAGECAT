@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% from "macros.html" import filtering_section %}
+{% from "macros.html" import showNavigationBar %}
+{% from "macros.html" import renderHelpButton %}
+{% from "macros.html" import showSelectedClusters %}
+{% from 'macros.html' import renderJobDetailsInput %}
+{% from 'macros.html' import renderForm %}
+
+{% block navigationBar %}
+    {{ showNavigationBar('analyze') }}
+{% endblock %}
+
+{% block content %}
+    <h2 class="indent">Extract sequences</h2>
+<div>
+    <form action="{{url_for('submit_job')}}" method="post">
+        <input type="hidden" name="job_type" value="extract_sequences"/>
+        <input type="hidden" name="prev_job_id" value="{{prev_job_id}}"/>
+
+        <div>
+            <label class="fieldset-label" for="jobDetailsInputFieldset">Job description</label>
+            <fieldset id="jobDetailsInputFieldset">
+                {{ renderForm(all_forms.general.job_info) }}
+            </fieldset>
+        </div>
+
+        <div>
+            <label class="fieldset-label" for="filteringSection">Filtering</label>
+            <fieldset id="filteringSection">
+                {{ renderForm(all_forms.filtering) }}
+
+                <label class="textarea-label" for="selectedQueries">Queries</label>
+                {{ renderHelpButton('selectedQueries') }}
+                {{ showSelectedClusters(selected_queries, False, True) }}
+{#                <img class="help-button" onclick="showHelp('selectedQueries')" src="/static/images/question-circle.svg">#}
+            </fieldset>
+        </div>
+
+        <div>
+            <label class="fieldset-label" for="outputSection">Output</label>
+            <fieldset id="outputSection">
+                {{ renderForm(all_forms.output) }}
+            </fieldset>
+        </div>
+
+        <div class="input-layer centered">
+            {{ all_forms.general.submit.submit }}
+        </div>
+    </form>
+</div>
+{% endblock %}

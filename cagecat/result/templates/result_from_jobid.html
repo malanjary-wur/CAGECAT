@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% from "macros.html" import showNavigationBar %}
+
+{% block navigationBar %}
+    {{ showNavigationBar('results') }}
+{% endblock %}
+
+{% block scripts %}
+    showDetailedPreviousJobs();
+{% endblock %}
+
+{% block content %}
+<div class="indent">
+    <h2>Enter your job ID</h2>
+    <p>Show the status or results of a previously submitted job.</p>
+
+    <div>
+        <form method="post" action="{{ url_for('result.result_from_job_id') }}">
+            <input type="text" placeholder="A123B456C789D01" name="job_id" onfocusout="validateJobID()" maxlength="15" size="15"/>
+            <input class="button" style="width: 10%" type="submit" value="Show"/>
+        </form>
+    </div>
+</div>
+
+    <fieldset>
+        <table id="detailedPreviousJobs"></table>
+    </fieldset>
+{% endblock %}

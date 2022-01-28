@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% from "macros.html" import filtering_section %}
+{% from "macros.html" import showNavigationBar %}
+{% from "macros.html" import renderHelpButton %}
+{% from "macros.html" import showSelectedClusters %}
+{% from 'macros.html' import renderJobDetailsInput %}
+{% from 'macros.html' import showRequiredInputsText %}
+{% from 'macros.html' import renderForm %}
+
+{% block navigationBar %}
+    {{ showNavigationBar('analyze') }}
+{% endblock %}
+
+{% block content %}
+    <h2 class="indent">Visualize with query clusters</h2>
+    {{  showRequiredInputsText() }}
+
+    <form action="{{url_for('submit_job')}}" method="post">
+        <input type="hidden" name="job_type" value="clinker_query"/>
+        <input type="hidden" name="prev_job_id" value="{{prev_job_id}}"/>
+
+        <div>
+            <label class="fieldset-label" for="jobDetailsInputFieldset">Job description</label>
+            <fieldset id="jobDetailsInputFieldset">
+                {{ renderForm(all_forms.general.job_info) }}
+            </fieldset>
+        </div>
+
+        <div>
+            <label class="fieldset-label" for="filteringSection">Filtering</label>
+            <fieldset id="filteringSection">
+                {{ renderForm(all_forms.filtering, selected_clusters) }}
+            </fieldset>
+        </div>
+
+        <label class="fieldset-label" for="outputSection">Output</label>
+        <fieldset>
+                {{ renderForm(all_forms.output) }}
+        </fieldset>
+
+        <div>
+            {{ showSelectedClusters(cluster_headers, True, False) }}
+        </div>
+
+        <div class="input-layer centered">
+            {{ all_forms.general.submit.submit }}
+        </div>
+
+    </form>
+{% endblock %}
